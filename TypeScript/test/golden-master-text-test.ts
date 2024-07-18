@@ -1,4 +1,4 @@
-import { Item, FacerStore } from '../app/facer-store';
+import { Item, FacerStore } from "../app/facer-store";
 
 const items = [
   new Item("Seiko Watch", 10, 20), //
@@ -9,24 +9,22 @@ const items = [
   new Item("Passes to Watchface Conference", 15, 20),
   new Item("Passes to Watchface Conference", 10, 49),
   new Item("Passes to Watchface Conference", 5, 49),
-  // this fragile item does not work properly yet
-  new Item("Fragile Watch", 3, 6)];
-
+  new Item("Fragile Watch", 3, 6),
+];
 
 const facerStore = new FacerStore(items);
 
 let days: number = 2;
 if (process.argv.length > 2) {
-    days = +process.argv[2];
-  }
+  days = +process.argv[2];
+}
 
 for (let i = 0; i < days + 1; i++) {
   console.log("-------- day " + i + " --------");
   console.log("name, sellIn, quality");
-  items.forEach(element => {
-    console.log(element.name + ', ' + element.sellIn + ', ' + element.quality);
-
+  items.forEach((element) => {
+    console.log(element.name + ", " + element.sellIn + ", " + element.quality);
   });
   console.log();
-  facerStore.updateQuality();
+  facerStore.updateDailyItems();
 }

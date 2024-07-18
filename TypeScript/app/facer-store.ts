@@ -1,3 +1,5 @@
+import { watchesMethods } from "./facer-watches";
+
 export class Item {
   name: string;
   sellIn: number;
@@ -17,53 +19,28 @@ export class FacerStore {
     this.items = items;
   }
 
-  updateQuality() {
-    for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].name != 'Vintage Rolex' && this.items[i].name != 'Passes to Watchface Conference') {
-        if (this.items[i].quality > 0) {
-          if (this.items[i].name != 'Legendary Watch Face') {
-            this.items[i].quality = this.items[i].quality - 1
-          }
-        }
-      } else {
-        if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1
-          if (this.items[i].name == 'Passes to Watchface Conference') {
-            if (this.items[i].sellIn < 11) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-            if (this.items[i].sellIn < 6) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-          }
-        }
-      }
-      if (this.items[i].name != 'Legendary Watch Face') {
-        this.items[i].sellIn = this.items[i].sellIn - 1;
-      }
-      if (this.items[i].sellIn < 0) {
-        if (this.items[i].name != 'Vintage Rolex') {
-          if (this.items[i].name != 'Passes to Watchface Conference') {
-            if (this.items[i].quality > 0) {
-              if (this.items[i].name != 'Legendary Watch Face') {
-                this.items[i].quality = this.items[i].quality - 1
-              }
-            }
-          } else {
-            this.items[i].quality = this.items[i].quality - this.items[i].quality
-          }
-        } else {
-          if (this.items[i].quality < 50) {
-            this.items[i].quality = this.items[i].quality + 1
-          }
-        }
-      }
-    }
-
+  updateDailyItems() {
+    this.items.forEach((item) => {
+      this.updateQuality(item);
+      this.updateSellIn(item);
+    });
     return this.items;
+  }
+
+  updateQuality(item) {
+    const { getQuality } =
+      watchesMethods[item.name] || watchesMethods["Default"];
+
+    const newQuality = getQuality(item);
+    item.quality = newQuality;
+    return item;
+  }
+
+  updateSellIn(item) {
+    const { getSellIn } =
+      watchesMethods[item.name] || watchesMethods["Default"];
+    const newSellIn = getSellIn(item);
+    item.sellIn = newSellIn;
+    return item;
   }
 }
